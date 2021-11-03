@@ -40,14 +40,14 @@ data2
 If your datasets are tidy already, demonstrate that you can reshape data with pivot wider/longer here (e.g., untidy and then retidy). Alternatively, it may be easier to wait until the wrangling section so you can reshape your summary statistics. Note here if you are going to do this.
 
 ```{R}
+
+
 library(tidyverse)
 mdata2 <- data2 %>% mutate(Name = tolower(Genre))
 mdata1 <- data1 %>% select(-modified)
 mdata1 <- data1 %>% rename ('Genre'="Genres")
 mdata1 <- data1 %>% rename ('Runtime'="Runtime..mins.")
 mdata2<- data2
-View(mdata1)
-View(mdata2)
 # your tidying code (if applicable; can also wait until wrangling section)
 
 ```
@@ -56,11 +56,11 @@ View(mdata2)
 #### Joining/Merging
 
 ```{R}
-library(tidyverse)
+
 
 # your joining code
 mdatajoined <- mdata1 %>% full_join(mdata2, by="IMDb.Rating")
-mdatajoined
+moviejoin <- mdatajoined
 # of rows in dataset 1 509
 mdata1_rows <- nrow(mdata1)
 mdata1_rows
@@ -107,43 +107,44 @@ knitr::kable(moviejoin %>% summarize(Mean = mean(Num..Votes,
     na.omit, caption = "Number of Votes used to determine IMDb Score")
 
 # your wrangling code
-knitr::kable(moviejoin %>% summarize(Mean = mean(Runtime, 
-    na.rm = TRUE), Standard_Deviation = sd(Runtime, na.rm = TRUE), 
-    Variance = var(Runtime, na.rm = TRUE), `25%_Quantile` = quantile(Runtime, 
-        0.25, na.rm = TRUE), `50%_Quantile` = quantile(Runtime, 
-        0.5, na.rm = TRUE), `75%_Quantile` = quantile(Runtime, 0.75, 
-        na.rm = TRUE), Minimum = min(Runtime, na.rm = TRUE), Maximum = max(Runtime, 
-        na.rm = TRUE), Num_Distinct = n_distinct(Runtime, na.rm = TRUE)) %>% 
+knitr::kable(moviejoin %>% summarize(Mean = mean(Runtime.y, 
+    na.rm = TRUE), Standard_Deviation = sd(Runtime.y, na.rm = TRUE), 
+    Variance = var(Runtime.y, na.rm = TRUE), `25%_Quantile` = quantile(Runtime.y, 
+        0.25, na.rm = TRUE), `50%_Quantile` = quantile(Runtime.y, 
+        0.5, na.rm = TRUE), `75%_Quantile` = quantile(Runtime.y, 0.75, 
+        na.rm = TRUE), Minimum = min(Runtime.y, na.rm = TRUE), Maximum = max(Runtime.y, 
+        na.rm = TRUE), Num_Distinct = n_distinct(Runtime.y, na.rm = TRUE)) %>% 
     na.omit, caption = "Runtime Statistics of Movies in Joined database")
 #IMDb statistics
-knitr::kable(moviejoin %>% summarize(Mean = mean(IMDb.Rating.x, 
-    na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating.x, na.rm = TRUE), 
-    Variance = var(IMDb.Rating.x, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating.x, 
-        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating.x, 
-        0.5, na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating.x, 0.75, 
-        na.rm = TRUE), Minimum = min(IMDb.Rating.x, na.rm = TRUE), Maximum = max(IMDb.Rating.x, 
-        na.rm = TRUE), Num_Distinct = n_distinct(IMDb.Rating.x, na.rm = TRUE)) %>% 
+glimpse(moviejoin)
+knitr::kable(moviejoin %>% summarize(Mean = mean(IMDb.Rating, 
+    na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating, na.rm = TRUE), 
+    Variance = var(IMDb.Rating, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating, 
+        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating, 
+        0.5, na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating, 0.75, 
+        na.rm = TRUE), Minimum = min(IMDb.Rating, na.rm = TRUE), Maximum = max(IMDb.Rating, 
+        na.rm = TRUE), Num_Distinct = n_distinct(IMDb.Rating, na.rm = TRUE)) %>% 
     na.omit, caption = "IMDb rating Statistics of Movies in Joined database")
 # your wrangling code
-knitr::kable(moviejoin %>% group_by(IMDb.Rating.x) %>% pivot_wider() %>% 
-    summarize(Mean = mean(IMDb.Rating.x, na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating.x, 
-        na.rm = TRUE), Variance = var(IMDb.Rating.x, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating.x, 
-        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating.x, 0.5, 
-        na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating.x, 0.75, na.rm = TRUE), 
-        Minimum = min(IMDb.Rating.x, na.rm = TRUE), Maximum = max(IMDb.Rating.x, na.rm = TRUE), 
-        Num_Distinct = n_distinct(IMDb.Rating.x, na.rm = TRUE)) %>% na.omit %>% 
-    arrange(desc(Mean)) %>% slice(1:5) %>% select(IMDb.Rating.x), caption = "Top 5 IMDb Ratings")
+knitr::kable(moviejoin %>% group_by(IMDb.Rating) %>% pivot_wider() %>% 
+    summarize(Mean = mean(IMDb.Rating, na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating, 
+        na.rm = TRUE), Variance = var(IMDb.Rating, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating, 
+        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating, 0.5, 
+        na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating, 0.75, na.rm = TRUE), 
+        Minimum = min(IMDb.Rating, na.rm = TRUE), Maximum = max(IMDb.Rating, na.rm = TRUE), 
+        Num_Distinct = n_distinct(IMDb.Rating, na.rm = TRUE)) %>% na.omit %>% 
+    arrange(desc(Mean)) %>% slice(1:5) %>% select(IMDb.Rating), caption = "Top 5 IMDb Ratings")
 # Top Ratings my Genre
 knitr::kable(moviejoin %>% group_by(Genre, Title.x) %>% pivot_wider() %>% 
-    summarize(Mean = mean(IMDb.Rating.x, na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating.x, 
-        na.rm = TRUE), Variance = var(IMDb.Rating.x, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating.x, 
-        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating.x, 0.5, 
-        na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating.x, 0.75, na.rm = TRUE), 
-        Minimum = min(IMDb.Rating.x, na.rm = TRUE), Maximum = max(IMDb.Rating.x, na.rm = TRUE), 
-        Num_Distinct = n_distinct(IMDb.Rating.x, na.rm = TRUE)) %>% na.omit %>% 
+    summarize(Mean = mean(IMDb.Rating, na.rm = TRUE), Standard_Deviation = sd(IMDb.Rating, 
+        na.rm = TRUE), Variance = var(IMDb.Rating, na.rm = TRUE), `25%_Quantile` = quantile(IMDb.Rating, 
+        0.25, na.rm = TRUE), `50%_Quantile` = quantile(IMDb.Rating, 0.5, 
+        na.rm = TRUE), `75%_Quantile` = quantile(IMDb.Rating, 0.75, na.rm = TRUE), 
+        Minimum = min(IMDb.Rating, na.rm = TRUE), Maximum = max(IMDb.Rating, na.rm = TRUE), 
+        Num_Distinct = n_distinct(IMDb.Rating, na.rm = TRUE)) %>% na.omit %>% 
     arrange(desc(Mean)) %>% slice(1:2), caption = "Top 2 Highest Rated Movies by Genre")
 #Mutate Function
-HighlyRated_Metric_Added <- moviejoin%>% mutate( HighlyRated = (IMDb.Rating.y>7.5))
+HighlyRated_Metric_Added <- moviejoin%>% mutate( HighlyRated = (IMDb.Rating>7.5))
 knitr::kable(HighlyRated_Metric_Added %>% group_by(Genres) %>% summarize(Mean = mean(HighlyRated, 
     na.rm = TRUE), Standard_Deviation = sd(HighlyRated, 
     na.rm = TRUE), Variance = var(HighlyRated, na.rm = TRUE), 
@@ -173,7 +174,7 @@ Your discussion of wrangling section here. Feel encouraged to break up into more
 # your plot 1
 library(ggridges)
 
-ggplot(moviejoin, aes(x = IMDb.Rating.x, color = Num..Votes)) + geom_density(alpha = 0.75) + 
+ggplot(moviejoin, aes(x = IMDb.Rating, color = Num..Votes)) + geom_density(alpha = 0.75) + 
     theme(legend.position = c(0.9, 0.7)) + geom_rug() + scale_x_continuous() + 
     ggtitle("IMDb Rating vs Number of Votes Density Plot") + theme(plot.title = element_text(hjust = 0.5)) + 
     xlab("IMDb Rating") + ylab("Density")
@@ -187,7 +188,7 @@ With this plot, I wanted to see if there was any correlation between the number 
 
 library(ggplot2)
 
-ggplot(moviejoin, aes(x = IMDb.Rating.y, y = Language, color = Title.type )) + 
+ggplot(moviejoin, aes(x = IMDb.Rating, y = Language, color = Title.type )) + 
     geom_point() + geom_smooth(method = "lm") + ggtitle("IMDB Rating vs Runtime Categorized by Language") + 
     theme(plot.title = element_text(hjust = 0.5)) + xlab("IMDb Rating") + 
     ylab("Runtime")
@@ -198,7 +199,7 @@ This plot shows the runtime of each content type based on the language. The x ax
 
 ```{R}
 # your plot 3
-ggplot(moviejoin, aes(x = Title.type, y = IMDb.Rating.x)) + geom_bar(stat = "summary", 
+ggplot(moviejoin, aes(x = Title.type, y = IMDb.Rating)) + geom_bar(stat = "summary", 
     fun = mean) + geom_errorbar(stat = "summary", fun.data = mean_se) + 
     scale_y_continuous(breaks = seq()) + ggtitle("Mean IMDb score per Content Type") + 
     theme(plot.title = element_text(hjust = 0.5)) + xlab("Position") + 
